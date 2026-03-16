@@ -1,0 +1,6 @@
+base_url: "https://api.cloudflare.com/client/v4"
+default_target_url: "https://cafef.vn/du-lieu.chn"
+timeout: 60000
+retry: 3
+output_dir: "output"
+
