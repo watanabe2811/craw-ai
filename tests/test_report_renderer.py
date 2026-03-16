@@ -1,7 +1,7 @@
 from app.exporters.report_renderer import render_cafef_report
 
 
-def test_render_cafef_report_includes_key_sections() -> None:
+def test_render_cafef_report_omits_news_and_analysis_sections() -> None:
     report = render_cafef_report(
         {
             "title": "Bao cao mau",
@@ -20,6 +20,14 @@ def test_render_cafef_report_includes_key_sections() -> None:
                     "url": "https://example.com/news-1",
                 }
             ],
+            "analysis_reports": [
+                {
+                    "date": "16/03",
+                    "symbol": "AAA",
+                    "title": "Phan tich 1",
+                    "url": "https://example.com/report-1",
+                }
+            ],
             "top_stocks": [
                 {
                     "rank": "1",
@@ -34,5 +42,6 @@ def test_render_cafef_report_includes_key_sections() -> None:
 
     assert "Bao cao mau" in report
     assert "Chi so thi truong" in report
-    assert "Tin moi" in report
     assert "#1 AAA" in report
+    assert "Tin moi" not in report
+    assert "Bao cao phan tich" not in report

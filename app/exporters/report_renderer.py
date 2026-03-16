@@ -21,16 +21,6 @@ def render_cafef_report(data: dict[str, object]) -> str:
             )
         lines.append("")
 
-    latest_news = data.get("latest_news", [])
-    if isinstance(latest_news, list) and latest_news:
-        lines.append("Tin moi")
-        lines.append("-" * 7)
-        for item in latest_news[:10]:
-            if not isinstance(item, dict):
-                continue
-            lines.append(f"- [{item.get('time')}] {item.get('title')}\n  {item.get('url')}")
-        lines.append("")
-
     top_stocks = data.get("top_stocks", [])
     if isinstance(top_stocks, list) and top_stocks:
         lines.append("Top co phieu")
@@ -73,16 +63,6 @@ def render_cafef_report(data: dict[str, object]) -> str:
             if commodities.get("more_url"):
                 lines.append(f"Xem them: {commodities.get('more_url')}")
             lines.append("")
-
-    analysis_reports = data.get("analysis_reports", [])
-    if isinstance(analysis_reports, list) and analysis_reports:
-        lines.append("Bao cao phan tich")
-        lines.append("-" * 17)
-        for item in analysis_reports[:10]:
-            if not isinstance(item, dict):
-                continue
-            lines.append(f"- [{item.get('date')}] {item.get('symbol')}: {item.get('title')}\n  {item.get('url')}")
-        lines.append("")
 
     note = data.get("note")
     if note:
