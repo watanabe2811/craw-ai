@@ -26,6 +26,10 @@ class CrawlService:
         self.exporter = exporter
 
     def crawl(self, url: str, save_raw: bool = False) -> tuple[CrawlResult, Path]:
+        crawl_data = self.crawl_and_collect(url, save_raw=save_raw)
+        return crawl_data["result"], crawl_data["json_file"]
+
+    def crawl_and_collect(self, url: str, save_raw: bool = False) -> dict[str, object]:
         html = self.client.render_page(url)
         parsed = self.parser.parse(html, url)
         normalized = self.normalize(url, parsed)
@@ -33,23 +37,37 @@ class CrawlService:
         timestamp = normalized.collected_at.strftime("%Y%m%dT%H%M%SZ")
         slug = self._build_filename_slug(url)
         output_file = self.exporter.export(normalized, f"{slug}_{timestamp}.json")
+        raw_html_file: Path | None = None
 
         if save_raw:
-            self.exporter.export_raw_html(html, f"{slug}_{timestamp}.html")
+            raw_html_file = self.exporter.export_raw_html(html, f"{slug}_{timestamp}.html")
 
-        return normalized, output_file
+        return {
+            "result": normalized,
+            "json_file": output_file,
+            "html": html,
+            "raw_html_file": raw_html_file,
+            "timestamp": timestamp,
+            "slug": slug,
+        }
 
     def extract_text_from_html(self, html: str, base_url: str = "https://example.com") -> str:
         parsed = self.parser.parse(html, base_url)
         main_text = parsed.get("main_text")
         return main_text if isinstance(main_text, str) else ""
 
+    def extract_full_text_from_html(self, html: str) -> str:
+        return self.parser.extract_full_text(html)
+
     def extract_text_from_html_file(
         self,
         html_file: str,
         base_url: str = "https://example.com",
+        mode: str = "main",
     ) -> str:
         html = Path(html_file).read_text(encoding="utf-8")
+        if mode == "full":
+            return self.extract_full_text_from_html(html)
         return self.extract_text_from_html(html, base_url=base_url)
 
     def normalize(self, url: str, parsed_html: dict[str, object]) -> CrawlResult:

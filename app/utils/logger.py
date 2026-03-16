@@ -4,7 +4,7 @@ import logging
 from pathlib import Path
 
 
-def setup_logging(debug: bool = False) -> None:
+def setup_logging(debug: bool = False, enable_console: bool = True) -> None:
     log_dir = Path("logs")
     log_dir.mkdir(parents=True, exist_ok=True)
 
@@ -17,18 +17,18 @@ def setup_logging(debug: bool = False) -> None:
     root_logger.setLevel(level)
     root_logger.handlers.clear()
 
-    console_handler = logging.StreamHandler()
-    console_handler.setLevel(level)
-    console_handler.setFormatter(formatter)
-
     file_handler = logging.FileHandler(log_dir / "app.log", encoding="utf-8")
     file_handler.setLevel(level)
     file_handler.setFormatter(formatter)
 
-    root_logger.addHandler(console_handler)
+    if enable_console:
+        console_handler = logging.StreamHandler()
+        console_handler.setLevel(level)
+        console_handler.setFormatter(formatter)
+        root_logger.addHandler(console_handler)
+
     root_logger.addHandler(file_handler)
 
 
 def get_logger(name: str) -> logging.Logger:
     return logging.getLogger(name)
-

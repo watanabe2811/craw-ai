@@ -94,10 +94,15 @@ Lenh co san:
 python main.py crawl --url https://cafef.vn/du-lieu.chn
 ```
 
+Mac dinh, lenh `crawl` se in ra bao cao text de doc nhanh va dong thoi luu them file `.report.txt`.
+
 Tuy chon:
 
 - `--url`: URL dich can render.
+- `--output-format`: `report` (mac dinh) hoac `json`.
 - `--save-raw`: luu them file HTML da render.
+- `--stdout-only`: chi in noi dung chinh ra stdout, phu hop cho bot/webhook.
+- `--max-chars`: cat ngan stdout theo so ky tu toi da, huu ich cho Discord.
 - `--debug`: bat DEBUG logging.
 
 Vi du:
@@ -106,10 +111,33 @@ Vi du:
 python main.py crawl --url https://cafef.vn/du-lieu.chn --save-raw --debug
 ```
 
+Neu muon lay JSON thay vi bao cao text:
+
+```bash
+python main.py crawl --url https://cafef.vn/du-lieu.chn --output-format json
+```
+
+Neu muon bot Discord nhan truc tiep noi dung text:
+
+```bash
+python main.py crawl \
+  --url https://cafef.vn/du-lieu.chn \
+  --stdout-only \
+  --max-chars 1900
+```
+
 Doc file HTML cuc bo va tra ve noi dung dang text:
 
 ```bash
 python main.py extract-text --html-file output/cafef.vn_du-lieu.chn_20260316T081119Z.html
+```
+
+Lay gan nhu toan bo text hien thi trong `body`:
+
+```bash
+python main.py extract-text \
+  --html-file output/cafef.vn_du-lieu.chn_20260316T081119Z.html \
+  --mode full
 ```
 
 Luu text ra file:

@@ -1,0 +1,7 @@
+interface:
+  display_name: "OpenClaw CafeF Report"
+  short_description: "Crawl one dynamic page into a readable report"
+  default_prompt: "Use $openclaw-cafef-report to crawl one dynamic URL and return the default human-readable report."
+
+policy:
+  allow_implicit_invocation: true

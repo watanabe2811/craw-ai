@@ -58,6 +58,12 @@ class HtmlParser:
             "links": links,
         }
 
+    def extract_full_text(self, html: str) -> str:
+        soup = BeautifulSoup(html, "html.parser")
+        self._remove_noise(soup)
+        container = soup.body or soup
+        return self._clean_whitespace(container.get_text(" ", strip=True))
+
     def _extract_title(self, soup: BeautifulSoup) -> str | None:
         if soup.title and soup.title.string:
             return self._clean_whitespace(soup.title.string)

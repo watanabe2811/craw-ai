@@ -65,3 +65,36 @@ def test_extract_text_from_html_file(tmp_path: Path) -> None:
     text = service.extract_text_from_html_file(str(html_file), "https://example.com")
 
     assert text == "Demo Hello world from html file."
+
+
+def test_extract_full_text_from_html_file(tmp_path: Path) -> None:
+    html_file = tmp_path / "sample_full.html"
+    html_file.write_text(
+        """
+        <html>
+          <body>
+            <div class="header-banner">Banner</div>
+            <main>
+              <h1>Demo</h1>
+              <p>Hello world from html file.</p>
+            </main>
+            <div>Footer note</div>
+          </body>
+        </html>
+        """,
+        encoding="utf-8",
+    )
+
+    service = CrawlService(
+        client=DummyClient(),
+        parser=HtmlParser(),
+        exporter=JsonExporter(str(tmp_path)),
+    )
+
+    text = service.extract_text_from_html_file(
+        str(html_file),
+        "https://example.com",
+        mode="full",
+    )
+
+    assert text == "Demo Hello world from html file. Footer note"
